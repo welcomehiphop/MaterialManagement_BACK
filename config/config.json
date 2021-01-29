@@ -1,0 +1,35 @@
+{
+    "development": {
+        "username": "sa",
+        "password": "tsePortal@2013",
+        "database": "intra_TSE",
+        "host": "107.101.81.9",
+        "dialect": "mssql",
+        "operatorsAliases": 0,
+        "dialectOptions": {
+            "options": {
+                "encrypt": false
+            }
+        }
+    },
+    "test": {
+        "username": "root",
+        "password": null,
+        "database": "database_test",
+        "host": "127.0.0.1",
+        "dialect": "mysql"
+    },
+    "production": {
+        "username": "sa",
+        "password": "tsePortal@2013",
+        "database": "intra_TSE",
+        "host": "107.101.81.9",
+        "dialect": "mssql",
+        "operatorsAliases": 0,
+        "dialectOptions": {
+            "options": {
+                "encrypt": false
+            }
+        }
+    }
+}
