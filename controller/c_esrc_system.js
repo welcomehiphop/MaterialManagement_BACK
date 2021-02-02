@@ -140,5 +140,39 @@ router.post('/post_esrc_list', uploadFileMiddleware, async(req, res) => {
 })
 
 
+//inout-management
+
+router.get('/get_inout_list', async(req, res) => {
+    let sql = "select a.id,a.spare_code,a.movement,b.description,c.location_code,a.qty,a.reg_name,a.reg_date,c.plant from t_esrc_in_out as a join t_esrc_mold_master as b on a.spare_code = b.spare_code join t_esrc_location_master as c on a.location = c.location_code"
+
+    const data = await db.sequelize.query(sql, {
+        type: QueryTypes.SELECT
+    })
+
+    res.send(data)
+})
+
+router.post('/post_inout_gr', async(req, res) => {
+
+    const spare_code = req.body.spare_code
+    const purpose = req.body.purpose
+    const po = req.body.po
+    const movement = req.body.movement
+    const location = req.body.location
+    const qty = req.body.qty
+    const reg_name = req.body.reg_name
+    const reg_date = req.body.reg_date
+    let sql = "insert into t_esrc_in_out (spare_code,purpose,po,movement,location,qty,reg_name,reg_date) values (:spare_code,:purpose,:po,:movement,:location,:qty,:reg_name,:reg_date)"
+    const data = await db.sequelize.query(sql, {
+        replacements: { spare_code: spare_code, purpose: purpose, po: po, movement: movement, location: location, qty: qty, reg_name: reg_name, reg_date: reg_date, },
+        type: QueryTypes.INSERT
+    })
+    res.send({
+        tatus: "Sucess fully",
+        data: req.body
+    })
+})
+
+
 
 module.exports = router
