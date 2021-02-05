@@ -5,6 +5,7 @@ const { QueryTypes } = require('sequelize');
 //const upload = multer(multerConfig.config).single(multerConfig.keyUpload)
 const db = require('../models');
 const uploadFileMiddleware = require("../middleware/upload");
+const upload = require("../middleware/uploadfile")
 
 router.get('/get_esrc_list', async(req, res) => {
     let sql = "select * from t_esrc_mold_master"
@@ -127,12 +128,12 @@ router.post('/post_esrc_list', uploadFileMiddleware, async(req, res) => {
     const safe_stock = req.body.safe_stock
     const type = req.body.type
     const plant = req.body.plant
-    const reg_name = req.body.reg_name
+    const reg_empno = req.body.reg_empno
     const file = req.file
-    let sql = "insert into t_esrc_mold_master (spare_code,description,price,safe_stock,type,plant,picture,reg_name)" +
-        "values(:spare_code, :description, :price, :safe_stock, :type,  :plant, :filename,:reg_name)"
+    let sql = "insert into t_esrc_mold_master (spare_code,description,price,safe_stock,type,plant,picture,reg_empno)" +
+        "values(:spare_code, :description, :price, :safe_stock, :type,  :plant, :filename,:reg_empno)"
     const data = await db.sequelize.query(sql, {
-        replacements: { spare_code: spare_code, description: description, price: price, safe_stock: safe_stock, type: type, plant: plant, reg_name: reg_name, filename: file.filename },
+        replacements: { spare_code: spare_code, description: description, price: price, safe_stock: safe_stock, type: type, plant: plant, reg_empno: reg_empno, filename: file.filename },
         type: QueryTypes.INSERT
     })
 
@@ -143,9 +144,20 @@ router.post('/post_esrc_list', uploadFileMiddleware, async(req, res) => {
 //inout-management
 
 router.get('/get_inout_list', async(req, res) => {
-    let sql = "select a.id,a.spare_code,a.movement,b.description,c.location_code,a.qty,a.reg_name,a.reg_date,c.plant from t_esrc_in_out as a join t_esrc_mold_master as b on a.spare_code = b.spare_code join t_esrc_location_master as c on a.location = c.location_code"
+    let sql = "select a.id,a.spare_code,a.movement,b.description,c.location_code,a.qty,a.reg_empno,a.reg_date,c.plant from t_esrc_in_out as a join t_esrc_mold_master as b on a.spare_code = b.spare_code join t_esrc_location_master as c on a.location = c.location_code order by a.id desc"
 
     const data = await db.sequelize.query(sql, {
+        type: QueryTypes.SELECT
+    })
+
+    res.send(data)
+})
+
+router.get('/get_inout_list/:id', async(req, res) => {
+    const id = req.params.id
+    let sql = "select a.id,a.reg_empno,a.spare_code,b.type,b.description,a.purpose,a.po,a.reg_date,a.qty,a.location from t_esrc_in_out as a join t_esrc_mold_master as b on a.spare_code = b.spare_code join t_esrc_location_master as c on a.location = c.location_code where a.id = :id"
+    const data = await db.sequelize.query(sql, {
+        replacements: { id: id },
         type: QueryTypes.SELECT
     })
 
@@ -160,11 +172,11 @@ router.post('/post_inout_gr', async(req, res) => {
     const movement = req.body.movement
     const location = req.body.location
     const qty = req.body.qty
-    const reg_name = req.body.reg_name
+    const reg_empno = req.body.reg_empno
     const reg_date = req.body.reg_date
-    let sql = "insert into t_esrc_in_out (spare_code,purpose,po,movement,location,qty,reg_name,reg_date) values (:spare_code,:purpose,:po,:movement,:location,:qty,:reg_name,:reg_date)"
+    let sql = "insert into t_esrc_in_out (spare_code,purpose,po,movement,location,qty,reg_empno,reg_date) values (:spare_code,:purpose,:po,:movement,:location,:qty,:reg_empno,:reg_date)"
     const data = await db.sequelize.query(sql, {
-        replacements: { spare_code: spare_code, purpose: purpose, po: po, movement: movement, location: location, qty: qty, reg_name: reg_name, reg_date: reg_date, },
+        replacements: { spare_code: spare_code, purpose: purpose, po: po, movement: movement, location: location, qty: qty, reg_empno: reg_empno, reg_date: reg_date, },
         type: QueryTypes.INSERT
     })
     res.send({
@@ -173,6 +185,20 @@ router.post('/post_inout_gr', async(req, res) => {
     })
 })
 
+router.post('/files/post', upload, async(req, res) => {
+    var fileinfo = req.files;
+    var title = req.body.title;
+    console.log(title);
+    res.send(fileinfo);
+})
+
+router.get('/get_approve_list', async(req, res) => {
+    let sql = "select * from t_esrc_approver_test"
+    const data = await db.sequelize.query(sql, {
+        type: QueryTypes.SELECT
+    })
+    res.send(data)
+})
 
 
 module.exports = router
