@@ -5,7 +5,8 @@ const { QueryTypes } = require('sequelize');
 //const upload = multer(multerConfig.config).single(multerConfig.keyUpload)
 const db = require('../models');
 const uploadFileMiddleware = require("../middleware/upload");
-const upload = require("../middleware/uploadfile")
+const upload = require("../middleware/uploadfile");
+const { response } = require('express');
 
 router.get('/get_esrc_list', async(req, res) => {
     let sql = "select * from t_esrc_mold_master"
@@ -194,6 +195,14 @@ router.post('/files/post', upload, async(req, res) => {
 
 router.get('/get_approve_list', async(req, res) => {
     let sql = "select * from t_esrc_approver_test"
+    const data = await db.sequelize.query(sql, {
+        type: QueryTypes.SELECT
+    })
+    res.send(data)
+})
+
+router.get('/get_spare_list', async(req, res) => {
+    let sql = "select a.spare_code,b.description,a.location,SUM(qty) as qty from t_esrc_in_out as a join t_esrc_mold_master as b on a.spare_code = b.spare_code where movement = 'GR' group by a.spare_code,a.location,b.description"
     const data = await db.sequelize.query(sql, {
         type: QueryTypes.SELECT
     })
