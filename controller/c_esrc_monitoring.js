@@ -8,12 +8,15 @@ const uploadFileMiddleware = require("../middleware/upload");
 const upload = require("../middleware/uploadfile");
 
 router.get('/get_fe_monitoring', async(req, res) => {
-    let sql = "select a.id,a.location_code , qty , c.safe_stock from t_esrc_location_master as a left join t_esrc_in_out as b on a.location_code = b.location left join t_esrc_mold_master as c on b.spare_code = c.spare_code"
+    const stock = req.query.stock
+    let sql = "select a.id,a.location_code from t_esrc_location_master as a where a.location_code like :stock group by a.location_code,a.id"
     const data = await db.sequelize.query(sql, {
+        replacements: { stock: stock },
         type: QueryTypes.SELECT
     });
     res.send(data);
 })
+
 
 
 module.exports = router

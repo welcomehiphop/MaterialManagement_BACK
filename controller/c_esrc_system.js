@@ -166,7 +166,6 @@ router.get('/get_inout_list/:id', async(req, res) => {
 })
 
 router.post('/post_inout_gr', async(req, res) => {
-
     const spare_code = req.body.spare_code
     const purpose = req.body.purpose
     const po = req.body.po
