@@ -6,7 +6,7 @@ const { QueryTypes } = require('sequelize');
 const db = require('../models');
 const uploadFileMiddleware = require("../middleware/upload");
 const upload = require("../middleware/uploadfile");
-const { response } = require('express');
+
 
 router.get('/get_esrc_list', async(req, res) => {
     let sql = "select * from t_esrc_mold_master"
