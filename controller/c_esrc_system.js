@@ -180,9 +180,20 @@ router.post('/post_inout_gr', async(req, res) => {
         type: QueryTypes.INSERT
     })
     res.send({
-        tatus: "Sucess fully",
+        status: "Sucess fully",
         data: req.body
     })
+})
+
+router.post('/post_inout_stock', async(req, res) => {
+    const spare_code = req.body.spare_code
+    const location_code = req.body.location_code
+    const qty = req.body.qty
+    let sql = "insert into t_esrc_stock (spare_code,location_code,qty) values(:spare_code,:location_code,:qty)"
+    const data = await db.sequelize.query(sql, {
+        replacements: { spare_code: spare_code, location_code: location_code, qty: qty },
+    })
+    res.send(req.body)
 })
 
 router.post('/files/post', upload, async(req, res) => {
