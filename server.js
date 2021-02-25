@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: false }))
 // app.use(express.static(path.join(__dirname, '/upload')));
 app.use(require('./controller/c_esrc_system'))
 app.use(require('./controller/c_esrc_monitoring'))
-
+app.use(require('./controller/c_esrc_approval'))
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {

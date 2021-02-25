@@ -31,7 +31,7 @@ router.get('/get_fe_spare', async(req, res) => {
 router.get('/get_stock_qty', async(req, res) => {
     const spare_code = req.query.spare_code
     const location_code = req.query.location_code
-    let sql = "select isnull(qty,0) as qty from t_esrc_stock where spare_code = :spare_code and location_code = :location_code"
+    let sql = "select spare_code,isnull(qty,0) as qty from t_esrc_stock where spare_code = :spare_code and location_code = :location_code"
     const data = await db.sequelize.query(sql, {
         replacements: { spare_code: spare_code, location_code: location_code },
         type: QueryTypes.SELECT
@@ -47,6 +47,20 @@ router.put('/update_stock_qty', async(req, res) => {
     const data = await db.sequelize.query(sql, {
         replacements: { spare_code: spare_code, location_code: location_code, qty: qty },
         type: QueryTypes.UPDATE
+    })
+    res.send(req.body)
+})
+
+router.post('/test_post', async(req, res) => {
+    const id = req.body.id
+    const id2 = req.body.id2
+    const sql = "insert into t_esrc_test(id) values(:id)"
+    const sql2 = "insert into t_esrc_test2(id) values(:id2)"
+    const data = await db.sequelize.query(sql, {
+        replacements: { id: id }
+    })
+    const data2 = await db.sequelize.query(sql2, {
+        replacements: { id2: id2 }
     })
     res.send(req.body)
 })

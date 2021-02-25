@@ -4,17 +4,15 @@ const multer = require("multer");
 
 let storage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, __basedir + '/upload/images');
+        callback(null, __basedir + '/upload/files');
     },
     filename: (req, file, callback) => {
         var datetimestamp = Date.now();
-        callback(null, "image" + '_' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1])
+        callback(null, file.originalname)
     },
 })
 
-var upload = multer({ storage: storage }).single("upload");
+let upload = multer({ storage: storage }).array("files");
 
-
-
-let upload2 = util.promisify(upload);
-module.exports = upload2;
+let uploadMultiFile = util.promisify(upload);
+module.exports = uploadMultiFile;
