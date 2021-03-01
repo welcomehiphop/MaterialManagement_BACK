@@ -6,7 +6,6 @@ const { QueryTypes } = require('sequelize');
 const db = require('../models');
 const uploadFileMiddleware = require("../middleware/upload");
 const upload = require("../middleware/uploadfile");
-const { waitForDebugger } = require('inspector');
 
 
 router.get('/get_esrc_list', async(req, res) => {
@@ -112,19 +111,19 @@ router.put('/update_esrc_list/:id', uploadFileMiddleware, async(req, res) => {
     const price = req.body.price
     const safe_stock = req.body.safe_stock
     const type = req.body.type
-    const reg_name = req.body.reg_name
+    const reg_empno = req.body.reg_empno
     let sql = ""
     if (req.file) {
         const filename = req.file.filename
-        sql = "Update t_esrc_mold_master set plant = :plant, spare_code = :spare_code, description = :description, price = :price, safe_stock = :safe_stock, type = :type, reg_name = :reg_name , picture = :filename where id = :id"
+        sql = "Update t_esrc_mold_master set plant = :plant, spare_code = :spare_code, description = :description, price = :price, safe_stock = :safe_stock, type = :type, reg_empno = :reg_empno , picture = :filename where id = :id"
         const [results, metadata] = await db.sequelize.query(sql, {
-            replacements: { id: id, plant: plant, spare_code: spare_code, description: description, price: price, safe_stock: safe_stock, type: type, reg_name: reg_name, filename: filename },
+            replacements: { id: id, plant: plant, spare_code: spare_code, description: description, price: price, safe_stock: safe_stock, type: type, reg_empno: reg_empno, filename: filename },
             type: QueryTypes.UPDATE
         })
     } else {
-        sql = "Update t_esrc_mold_master set plant = :plant, spare_code = :spare_code, description = :description, price = :price, safe_stock = :safe_stock, type = :type, reg_name = :reg_name where id = :id"
+        sql = "Update t_esrc_mold_master set plant = :plant, spare_code = :spare_code, description = :description, price = :price, safe_stock = :safe_stock, type = :type, reg_empno = :reg_empno where id = :id"
         const [results, metadata] = await db.sequelize.query(sql, {
-            replacements: { id: id, plant: plant, spare_code: spare_code, description: description, price: price, safe_stock: safe_stock, type: type, reg_name: reg_name },
+            replacements: { id: id, plant: plant, spare_code: spare_code, description: description, price: price, safe_stock: safe_stock, type: type, reg_empno: reg_empno },
             type: QueryTypes.UPDATE
         })
     }

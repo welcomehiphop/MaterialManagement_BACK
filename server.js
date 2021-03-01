@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(require('./controller/c_esrc_system'))
 app.use(require('./controller/c_esrc_monitoring'))
 app.use(require('./controller/c_esrc_approval'))
+app.use(require('./controller/c_ppe_system'))
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
