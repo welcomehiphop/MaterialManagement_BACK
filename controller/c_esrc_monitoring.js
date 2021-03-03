@@ -4,9 +4,7 @@ const path = require('path')
 const { QueryTypes } = require('sequelize');
 //const upload = multer(multerConfig.config).single(multerConfig.keyUpload)
 const db = require('../models');
-const uploadFileMiddleware = require("../middleware/upload");
-const upload = require("../middleware/uploadfile");
-const { response } = require('express');
+
 
 router.get('/get_fe_monitoring', async(req, res) => {
     const stock = req.query.stock
@@ -51,18 +49,6 @@ router.put('/update_stock_qty', async(req, res) => {
     res.send(req.body)
 })
 
-router.post('/test_post', async(req, res) => {
-    const id = req.body.id
-    const id2 = req.body.id2
-    const sql = "insert into t_esrc_test(id) values(:id)"
-    const sql2 = "insert into t_esrc_test2(id) values(:id2)"
-    const data = await db.sequelize.query(sql, {
-        replacements: { id: id }
-    })
-    const data2 = await db.sequelize.query(sql2, {
-        replacements: { id2: id2 }
-    })
-    res.send(req.body)
-})
+
 
 module.exports = router

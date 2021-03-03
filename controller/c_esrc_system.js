@@ -202,7 +202,7 @@ router.post('/post_inout_gr', async(req, res) => {
         type: QueryTypes.INSERT
     })
     res.send({
-        status: "Sucess fully",
+        status: "Sucessfully",
         data: req.body
     })
 })
