@@ -4,6 +4,7 @@ var path = require('path');
 var cors = require('cors')
 
 
+
 global.__basedir = __dirname
 
 /*middle ware*/
@@ -17,6 +18,11 @@ app.use(require('./controller/c_esrc_system'))
 app.use(require('./controller/c_esrc_monitoring'))
 app.use(require('./controller/c_esrc_approval'))
 app.use(require('./controller/c_ppe_system'))
+app.use(require('./controller/t_esrc_ppe_approval'))
+app.use(require('./controller/c_it_mold'))
+app.use(require('./controller/c_it_location'))
+app.use(require('./controller/c_it_inout'))
+app.use(require('./controller/c_it_carryout'))
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {

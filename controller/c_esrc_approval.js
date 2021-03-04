@@ -39,7 +39,7 @@ router.get('/get_carry_list', async(req, res) => {
         fromDate: req.query.fromDate,
         toDate: req.query.toDate
     }
-    let sql = "select a.id,docno,reqType,purpose,a.reg_no,c.usrnm as reg_name,a.carrier,d.usrnm as carrier_name,department,a.reg_date,CASE when b.docst = 'P' then 'Pending' when b.docst = 'C' then 'Approved' when b.docst = 'W' then 'Withdraw' when b.docst = 'R' then 'Reject' END as status from t_esrc_carry as a join t_esrc_appprocess as b on a.id = b.ref_id join t_user as c on a.reg_no = c.usrid join t_user as d on a.carrier = d.usrid where b.bocd = 'jigmolddie' and c.usrnm like :emp_name and docst like :docst and CONVERT(VARCHAR(8),a.reg_date,112) between :fromDate and :toDate order by a.id desc"
+    let sql = "select a.id,docno,reqType,purpose,a.reg_no,c.usrnm as reg_name,a.carrier,d.usrnm as carrier_name,department,CONVERT(varchar(20),a.reg_date,120) as reg_date,CASE when b.docst = 'P' then 'Pending' when b.docst = 'C' then 'Approved' when b.docst = 'W' then 'Withdraw' when b.docst = 'R' then 'Reject' END as status from t_esrc_carry as a join t_esrc_appprocess as b on a.id = b.ref_id join t_user as c on a.reg_no = c.usrid join t_user as d on a.carrier = d.usrid where b.bocd = 'jigmolddie' and c.usrnm like :emp_name and docst like :docst and CONVERT(VARCHAR(8),a.reg_date,112) between :fromDate and :toDate order by a.id desc"
     const data = await db.sequelize.query(sql, {
         replacements: { emp_name: condition.emp_name, docst: condition.docst, fromDate: condition.fromDate, toDate: condition.toDate },
         type: QueryTypes.SELECT

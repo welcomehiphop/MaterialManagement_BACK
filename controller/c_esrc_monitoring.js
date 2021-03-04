@@ -49,6 +49,4 @@ router.put('/update_stock_qty', async(req, res) => {
     res.send(req.body)
 })
 
-
-
 module.exports = router

@@ -279,7 +279,6 @@ router.get('/get_spare_list', async(req, res) => {
     } catch (e) {
         res.status(500).send(e.message)
     }
-
 })
 
 

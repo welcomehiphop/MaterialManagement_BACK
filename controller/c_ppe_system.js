@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const path = require('path')
 const { QueryTypes } = require('sequelize')
 const db = require('../models')
 const uploadFileMiddleware = require("../middleware/upload");
@@ -280,6 +279,21 @@ router.get('/get_ppe_stock', async(req, res) => {
     }
 })
 
+
+router.get('/get_ppe_spare', async(req, res) => {
+    const location = "%" + req.query.location + "%"
+    const spare_code = "%" + req.query.spare_code + "%"
+    try {
+        let sql = "select a.spare_code,b.description,a.location,c.qty,b.price from t_esrc_ppe_inout as a join t_esrc_ppe_mold as b on a.spare_code = b.spare_code join t_esrc_ppe_stock as c on a.spare_code = c.spare_code and a.location = c.location_code where a.location like :location and a.spare_code like :spare_code group by a.spare_code,b.description,a.location,c.qty,b.price"
+        const data = await db.sequelize.query(sql, {
+            replacements: { location: location, spare_code: spare_code },
+            type: QueryTypes.SELECT
+        })
+        res.send(data)
+    } catch (e) {
+        res.status(500).send(e.message)
+    }
+})
 
 
 module.exports = router
