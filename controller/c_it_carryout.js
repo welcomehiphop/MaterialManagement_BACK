@@ -69,7 +69,7 @@ router.get('/get_it_all_location', async(req, res) => {
     }
 })
 
-router.get('/get_it_spare', async(req, res) => {
+router.get('/get_it_spare_carry', async(req, res) => {
     const location = "%" + req.query.location + "%"
     const spare_code = "%" + req.query.spare_code + "%"
     try {

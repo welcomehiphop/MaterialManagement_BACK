@@ -295,5 +295,19 @@ router.get('/get_ppe_spare', async(req, res) => {
     }
 })
 
+router.get('/get_ppe_spare_monitor', async(req, res) => {
+    const stock = "%" + req.query.stock + "%"
+    try {
+        let sql = "select a.location_code,b.spare_code,a.plant,c.safe_stock,d.qty,CASE WHEN (d.qty) < c.safe_stock THEN 'NG' WHEN (d.qty) >= c.safe_stock THEN 'OK' ELSE 'NULL' END AS status from t_esrc_ppe_location as a left join t_esrc_ppe_inout as b on a.location_code = b.location left join t_esrc_ppe_mold as c on b.spare_code = c.spare_code left join t_esrc_ppe_stock as d on a.location_code = d.location_code and b.spare_code = d.spare_code where a.location_code like :stock group by a.location_code,b.spare_code,a.plant,c.safe_stock,d.qty"
+        const data = await db.sequelize.query(sql, {
+            replacements: { stock: stock },
+            type: QueryTypes.SELECT
+        })
+        res.send(data)
+    } catch (e) {
+        res.status(500).send(e.message)
+    }
+})
+
 
 module.exports = router

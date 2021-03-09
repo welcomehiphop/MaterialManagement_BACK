@@ -83,6 +83,7 @@ router.post('/post_it_stock', async(req, res) => {
 
 })
 
+
 router.put('/put_it_stock', async(req, res) => {
     const spare_code = req.body.spare_code
     const location_code = req.body.location_code
