@@ -22,7 +22,7 @@ router.get('/get_fe_stock_click', async(req, res) => {
         location: "%" + req.query.location + "%",
         plant: "%" + req.query.plant + "%"
     }
-    const sql = "select a.id,b.spare_code,b.type,b.description,a.qty,c.location_code,b.price,c.plant,b.picture from t_esrc_fe_stock as a join t_esrc_fe_mold as b on a.spare_code = b.spare_code join t_esrc_fe_location as c on a.location_code = c.location_code where a.qty <> 0 and c.location_code like :location and c.plant like :plant"
+    const sql = "select a.id,b.spare_code,b.type,b.description,a.qty,c.location_code,b.price,c.plant,b.picture from t_esrc_fe_stock as a join t_esrc_fe_mold as b on a.spare_code = b.spare_code join t_esrc_fe_location as c on a.location_code = c.location_code where a.qty >= 0 and c.location_code like :location and c.plant like :plant"
     try {
         const data = await db.sequelize.query(sql, {
             replacements: { location: condition.location, plant: condition.plant },
@@ -53,7 +53,7 @@ router.get('/get_ppe_stock_click', async(req, res) => {
         location: "%" + req.query.location + "%",
         plant: "%" + req.query.plant + "%"
     }
-    const sql = "select a.id,b.spare_code,b.type,b.description,a.qty,c.location_code,b.price,c.plant,b.picture from t_esrc_ppe_stock as a join t_esrc_ppe_mold as b on a.spare_code = b.spare_code join t_esrc_ppe_location as c on a.location_code = c.location_code where a.qty <> 0 and c.location_code like :location and c.plant like :plant"
+    const sql = "select a.id,b.spare_code,b.type,b.description,a.qty,c.location_code,b.price,c.plant,b.picture from t_esrc_ppe_stock as a join t_esrc_ppe_mold as b on a.spare_code = b.spare_code join t_esrc_ppe_location as c on a.location_code = c.location_code where a.qty >= 0 and c.location_code like :location and c.plant like :plant"
     try {
         const data = await db.sequelize.query(sql, {
             replacements: { location: condition.location, plant: condition.plant },
@@ -84,7 +84,7 @@ router.get('/get_it_stock_click', async(req, res) => {
         location: "%" + req.query.location + "%",
         plant: "%" + req.query.plant + "%"
     }
-    const sql = "select a.id,b.spare_code,b.type,b.description,a.qty,c.location_code,b.price,c.plant,b.picture from t_esrc_it_stock as a join t_esrc_it_mold as b on a.spare_code = b.spare_code join t_esrc_it_location as c on a.location_code = c.location_code where a.qty <> 0 and c.location_code like :location and c.plant like :plant"
+    const sql = "select a.id,b.spare_code,b.type,b.description,a.qty,c.location_code,b.price,c.plant,b.picture from t_esrc_it_stock as a join t_esrc_it_mold as b on a.spare_code = b.spare_code join t_esrc_it_location as c on a.location_code = c.location_code where a.qty >= 0 and c.location_code like :location and c.plant like :plant"
     try {
         const data = await db.sequelize.query(sql, {
             replacements: { location: condition.location, plant: condition.plant },

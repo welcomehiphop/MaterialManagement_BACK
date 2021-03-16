@@ -240,7 +240,9 @@ router.get('/get_approve_list', async(req, res) => {
     try {
         const deptcd = req.query.deptcd
         const usrnm = req.query.usrnm
-        let sql = "SELECT u.empno,u.usrnm,p.cdcd poscd,p.cdnm posnm, d.name deptnm FROM t_user u, t_cd_comm p, t_dept d WHERE p.catcd='POS' AND u.poscd *= p.cdcd AND u.deptcd = d.code AND ISNULL(u.resigndate,'')='' and u.poscd  in ('001','005','006','009','010','015','022','003') and u.deptcd LIKE :deptcd AND u.usrnm LIKE :usrnm  ORDER BY usrnm,poscd "
+            // let sql = "SELECT u.empno,u.usrnm,p.cdcd poscd,p.cdnm posnm, d.name deptnm FROM t_user u, t_cd_comm p, t_dept d WHERE p.catcd='POS' AND u.poscd *= p.cdcd AND u.deptcd = d.code AND ISNULL(u.resigndate,'')='' and u.poscd  in ('001','005','006','009','010','015','022','003') and u.deptcd LIKE :deptcd AND u.usrnm LIKE :usrnm  ORDER BY usrnm,poscd "
+        let sql = "SELECT u.empno,u.usrnm,p.cdcd poscd,p.cdnm posnm, d.name deptnm FROM t_user u, t_cd_comm p, t_dept d WHERE p.catcd='POS' AND u.poscd *= p.cdcd AND u.deptcd = d.code AND ISNULL(u.resigndate,'')='' and u.deptcd LIKE :deptcd AND u.usrnm LIKE :usrnm  ORDER BY usrnm,poscd "
+
         const data = await db.sequelize.query(sql, {
             replacements: { deptcd: deptcd, usrnm: usrnm },
             type: QueryTypes.SELECT

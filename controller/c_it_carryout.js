@@ -11,7 +11,7 @@ router.get('/get_it_carry', async(req, res) => {
         fromDate: req.query.fromDate,
         toDate: req.query.toDate
     }
-    let sql = "select a.id,docno,reqType,purpose,a.reg_no,c.usrnm as reg_name,a.carrier,d.usrnm as carrier_name,department,CONVERT(varchar(20),a.reg_date,120) as reg_date,CASE when b.docst = 'P' then 'Pending' when b.docst = 'C' then 'Approved' when b.docst = 'W' then 'Withdraw' when b.docst = 'R' then 'Reject' END as status from t_esrc_it_carry as a join t_esrc_appprocess as b on a.id = b.ref_id join t_user as c on a.reg_no = c.usrid join t_user as d on a.carrier = d.usrid where b.bocd = 'itroom' and c.usrnm like :emp_name and docst like :docst and CONVERT(VARCHAR(8),a.reg_date,112) between :fromDate and :toDate order by a.id desc"
+    let sql = "select a.id,docno,reqType,purpose,a.reg_no,c.usrnm as reg_name,a.carrier,d.usrnm as carrier_name,department,CONVERT(varchar(20),a.reg_date,120) as reg_date,CASE when b.docst = 'P' then 'Pending' when b.docst = 'C' then 'Approved' when b.docst = 'W' then 'Withdraw' when b.docst = 'R' then 'Reject' END as status from t_esrc_it_carry as a join t_appprocess as b on a.id = b.ref_idx join t_user as c on a.reg_no = c.empno join t_user as d on a.carrier = d.empno where b.bocd = 'itroom' and c.usrnm like :emp_name and docst like :docst and CONVERT(VARCHAR(8),a.reg_date,112) between :fromDate and :toDate order by a.id desc"
     try {
         const data = await db.sequelize.query(sql, {
             replacements: { emp_name: condition.emp_name, docst: condition.docst, fromDate: condition.fromDate, toDate: condition.toDate },
@@ -24,14 +24,15 @@ router.get('/get_it_carry', async(req, res) => {
 })
 
 router.get('/get_it_carry/:id', async(req, res) => {
+    const bocd = "itroom"
     const id = req.params.id
-    let sql = "select a.*,(select usrnm from t_user_all as b where a.app_user = b.empno) as Name ,b.cl_band,a.app_date,a.rcv_date,comment from t_esrc_applist as a  join t_user_all as b on a.app_user = b.empno where ref_id = :id"
-    let sql2 = "select a.*,(select usrnm from t_user as b where a.carrier = b.usrid) as carrier_name ,(select usrnm from t_user as b where a.reg_no = b.usrid) as reg_name from t_esrc_it_carry as a where id = :id"
+    let sql = "select a.*,(select usrnm from t_user_all as b where a.appusr = b.empno) as Name ,b.cl_band,a.appdate,a.rcvdate,comment from t_applist as a  join t_user_all as b on a.appusr = b.empno where ref_idx = :id and bocd = :bocd order by step"
+    let sql2 = "select a.*,(select usrnm from t_user as b where a.carrier = b.empno) as carrier_name ,(select usrnm from t_user as b where a.reg_no = b.empno) as reg_name from t_esrc_it_carry as a where id = :id"
     let sql3 = "select * from t_esrc_it_carry_file where ref_id = :id"
     let sql4 = "select *,convert(varchar(50),(qty * price),1) as total from t_esrc_it_carry_spare where ref_id = :id"
     try {
         const data = await db.sequelize.query(sql, {
-            replacements: { id: id },
+            replacements: { id: id, bocd: bocd },
             type: QueryTypes.SELECT
         })
         const data2 = await db.sequelize.query(sql2, {
@@ -138,6 +139,28 @@ router.post('/post_it_carry_file', uploadMultiFile, async(req, res) => {
         })
     }
     res.send(files);
+})
+
+router.put('/update_it_status/:id', async(req, res) => {
+    const id = req.params.id
+    const docst = req.body.docst
+    const app_date = req.body.app_date
+    const rcv_date = req.body.rcv_date
+    const sql = "update t_appprocess set docst = :docst where ref_idx = :id  and bocd = 'itroom'"
+    const sql2 = "update t_applist set appdate = :app_date , rcvdate = :rcv_date where ref_idx = :id and step = '1' and bocd = 'itroom'"
+    try {
+        const data = await db.sequelize.query(sql, {
+            replacements: { id: id, docst: docst },
+            type: QueryTypes.UPDATE
+        })
+        const data2 = await db.sequelize.query(sql2, {
+            replacements: { id: id, app_date: app_date, rcv_date: rcv_date },
+            type: QueryTypes.UPDATE
+        })
+        res.send('Success')
+    } catch (e) {
+        res.status(500).send(e.message)
+    }
 })
 
 

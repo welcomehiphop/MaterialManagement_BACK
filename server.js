@@ -24,6 +24,7 @@ app.use(require('./controller/c_it_location'))
 app.use(require('./controller/c_it_inout'))
 app.use(require('./controller/c_it_carryout'))
 app.use(require('./controller/c_esrc_stockview'))
+app.use(require('./controller/c_esrc_app_status'))
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
